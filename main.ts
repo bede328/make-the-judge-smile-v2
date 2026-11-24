@@ -43,6 +43,9 @@ function main(): void {
   if (/\s{2,}/.test(line)) {
     throw new Error("entry contains a double space");
   }
+  if (line.includes("\n") || line.includes("\r")) {
+    throw new Error("entry must be a single line");
+  }
   mkdirSync("/output", { recursive: true });
   writeFileSync("/output/entry.txt", line, "utf8");
   console.log(`wrote /output/entry.txt (${line.length} chars)`);
