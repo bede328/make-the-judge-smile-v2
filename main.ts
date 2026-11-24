@@ -35,9 +35,14 @@ const MAX_CHARS = 200;
 
 function main(): void {
   const line = LINE.trim();
-  if (line.length < 1 || line.length > MAX_CHARS) {
+  // Count characters as Unicode code points, matching how the scorer
+  // counts UTF-8 characters; String.length counts UTF-16 code units
+  // instead, so a line with a multi-byte character (e.g. an em dash)
+  // would be measured one short per astral/non-BMP character.
+  const charCount = [...line].length;
+  if (charCount < 1 || charCount > MAX_CHARS) {
     throw new Error(
-      `entry must be 1-${MAX_CHARS} characters, got ${line.length}`,
+      `entry must be 1-${MAX_CHARS} characters, got ${charCount}`,
     );
   }
   if (/\s{2,}/.test(line)) {
